@@ -15,7 +15,7 @@ torch.manual_seed(1111)
 # 输入尺寸
 input_size = 784
 # 隐藏层神经元个数
-hidden_size = 64
+hidden_size = 128
 # 隐藏层层数
 num_layers = 1
 # 种类数
@@ -84,7 +84,7 @@ class MLP(nn.Module):
                 # 二值化线性层， 无偏置
                 BinaryLinear(in_features, out_features, bias=False),
                 # 对out_features维度进行归一化，momentum为移动平均的动量值，eps为数值稳定性而加到分母上的值
-                nn.BatchNorm1d(out_features, momentum=momentum, eps=eps),
+                # nn.BatchNorm1d(out_features, momentum=momentum, eps=eps),
                 # 激活函数
                 BinaryTanh(),
                 # 随机置零

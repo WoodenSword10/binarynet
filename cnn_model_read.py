@@ -1,5 +1,7 @@
 from torch import nn
 from modules import *
+import numpy as np
+import cv2
 
 momentum = 0.9
 eps = 1e-6
@@ -31,5 +33,14 @@ cnn = CNN()
 cnn.load_state_dict(torch.load('cnn.pkl'))
 
 for para in cnn.parameters():
-    print(para)
+    print(para.shape)
 
+
+img = cv2.imread('final_9.bmp', 0)
+img_Data = np.array(img)
+img_Data = img_Data.reshape((1,1,28,28))
+img_Data = torch.from_numpy(img_Data)
+img_Data = img_Data.float()
+
+out = cnn(img_Data)
+print(out.argmax())

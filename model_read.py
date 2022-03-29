@@ -7,7 +7,7 @@ import numpy as np
 # 输入尺寸
 input_size = 784
 # 隐藏层神经元个数
-hidden_size = 1024
+hidden_size = 128
 # 隐藏层层数
 num_layers = 1
 # 种类数
@@ -41,7 +41,7 @@ class MLP(nn.Module):
                 # 二值化线性层， 无偏置
                 BinaryLinear(in_features, out_features, bias=False),
                 # 对out_features维度进行归一化，momentum为移动平均的动量值，eps为数值稳定性而加到分母上的值
-                nn.BatchNorm1d(out_features, momentum=momentum, eps=eps),
+                # nn.BatchNorm1d(out_features, momentum=momentum, eps=eps),
                 # 激活函数
                 BinaryTanh(),
                 # 随机置零
@@ -69,18 +69,25 @@ for para in mymodel.parameters():
     print(para.data.shape)
     if i == 0:
         w1 = para.data.numpy()
-    elif i == 3:
+    elif i == 1:
         w2 = para.data.numpy()
     i += 1
 
-img = cv2.imread('final_4.bmp', 0)
+img = cv2.imread('final_9.bmp', 0)
 img_Data = np.array(img)
 img_Data = img_Data.reshape((1, 784))
+img_Data = torch.from_numpy(img_Data)
+img_Data = img_Data.float()
+
+output = mymodel(img_Data)
+print(output.argmax())
+
+
 w1 = np.where(w1>0, 1, -1)
 w2 = np.where(w2>0, 1, -1)
-print(w1)
+# print(w1)
 a1 = np.dot(img_Data, w1.T)
-print(a1)
+# print(a1)
 a1 = np.where(a1>0, 1, -1)
 a2 = np.dot(a1, w2.T)
-print(a2)
+print(a2.argmax())

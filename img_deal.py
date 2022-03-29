@@ -2,7 +2,7 @@ import cv2
 import numpy as np
 np.set_printoptions(threshold=np.inf)
 
-img = cv2.imread('4.png')
+img = cv2.imread('0.jpg')
 imgray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 cv2.imshow('原始图', imgray)
 # print(np.array(imgray))
@@ -35,7 +35,7 @@ for i in range(len(contours)):
 
 res = cv2.resize(img, (28, 28), interpolation=cv2.INTER_CUBIC)
 cv2.imshow('图片尺寸修改', res)
-cv2.imwrite('final_4.bmp', res)
+cv2.imwrite('final_0.bmp', res)
 print(np.array(res).shape)
 
 
