@@ -15,7 +15,7 @@ torch.manual_seed(1111)
 # 输入尺寸
 input_size = 784
 # 隐藏层神经元个数
-hidden_size = 1024
+hidden_size = 64
 # 隐藏层层数
 num_layers = 1
 # 种类数
@@ -117,7 +117,9 @@ optimizer = Adam(mlp.parameters(), lr=lr_start)
 
 def clip_weight(parameters):
     for p in parameters:
+        # 获取参数数据
         p = p.data
+        # 将参数控制在-1到1之间，大于1的置1， 小于-1的置为-1
         p.clamp_(-1., 1.)
 
 
@@ -136,6 +138,7 @@ for epoch in range(num_epochs):
     # 从dataloader中获取数据和标签
     for i, (images, labels) in enumerate(train_loader):  
         # Convert torch tensor to Variable
+        # 将数据转换为变量类型
         images = Variable(images.view(-1, 28*28))
         labels = Variable(labels)
         
@@ -145,13 +148,14 @@ for epoch in range(num_epochs):
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
-
+        # 参数控制在[-1, 1]内
         clip_weight(mlp.parameters())
-        
+        # 打印信息
         if (i+1) % 100 == 0:
             print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f' 
                    %(epoch+1, num_epochs, i+1, len(train_dataset)/batch_size, loss.item()))
 
+    # 优化器学习率修改，衰减
     adjust_learning_rate(optimizer)
 
     # Test the Model
@@ -170,4 +174,4 @@ for epoch in range(num_epochs):
     mlp.train()
 
 # Save the Trained Model
-torch.save(mlp.state_dict(), 'mlp.pkl')
+torch.save(mlp.state_dict(), 'bnn1024.pkl')

@@ -60,7 +60,7 @@ class MLP(nn.Module):
         return out
 
 mymodel = MLP(input_size, hidden_size, num_classes, num_layers=num_layers)
-mymodel.load_state_dict(torch.load('mlp.pkl'))
+mymodel.load_state_dict(torch.load('bnn1024.pkl'))
 
 for para in mymodel.parameters():
     print(para.data.shape)
