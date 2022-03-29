@@ -1,6 +1,8 @@
 import torch
 from torch import nn
 from modules import BinaryLinear, BinaryTanh
+import cv2
+import numpy as np
 
 # 输入尺寸
 input_size = 784
@@ -62,5 +64,23 @@ class MLP(nn.Module):
 mymodel = MLP(input_size, hidden_size, num_classes, num_layers=num_layers)
 mymodel.load_state_dict(torch.load('bnn1024.pkl'))
 
+i = 0
 for para in mymodel.parameters():
     print(para.data.shape)
+    if i == 0:
+        w1 = para.data.numpy()
+    elif i == 3:
+        w2 = para.data.numpy()
+    i += 1
+
+img = cv2.imread('final_4.bmp', 0)
+img_Data = np.array(img)
+img_Data = img_Data.reshape((1, 784))
+w1 = np.where(w1>0, 1, -1)
+w2 = np.where(w2>0, 1, -1)
+print(w1)
+a1 = np.dot(img_Data, w1.T)
+print(a1)
+a1 = np.where(a1>0, 1, -1)
+a2 = np.dot(a1, w2.T)
+print(a2)
