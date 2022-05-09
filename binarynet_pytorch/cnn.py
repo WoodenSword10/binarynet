@@ -42,19 +42,24 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.layer1 = nn.Sequential(
-            BinaryConv2d(1, 16, kernel_size=5, padding=2),
-            nn.BatchNorm2d(16, momentum=momentum, eps=eps),
+            # BinaryConv2d(1, 32, kernel_size=5, padding=2),
+            # nn.BatchNorm2d(32, momentum=momentum, eps=eps),
+            BinaryConv2d(1, 32, kernel_size=5, bias=False),
             nn.MaxPool2d(2),
             BinaryTanh())
         self.layer2 = nn.Sequential(
-            BinaryConv2d(16, 32, kernel_size=5, padding=2),
-            nn.BatchNorm2d(32, momentum=momentum, eps=eps),
+            # BinaryConv2d(32, 32, kernel_size=5, padding=2),
+            # nn.BatchNorm2d(32, momentum=momentum, eps=eps),
+            # nn.MaxPool2d(2),
+            BinaryConv2d(32, 32, kernel_size=5, bias=False),
             nn.MaxPool2d(2),
             BinaryTanh())
-        self.fc = BinaryLinear(7*7*32, 10)
-        
+        # self.fc = BinaryLinear(7*7*32, 10)
+        self.fc = BinaryLinear(4 * 4 * 32, 10, bias=False)
+
     def forward(self, x):
         out = self.layer1(x)
+
         out = self.layer2(out)
         out = out.view(out.size(0), -1)
         out = self.fc(out)
@@ -115,4 +120,4 @@ for epoch in range(num_epochs):
     cnn.train()
 
 # Save the Trained Model
-torch.save(cnn.state_dict(), 'cnn.pkl')
+torch.save(cnn.state_dict(), 'cnn_8.pkl')

@@ -21,7 +21,7 @@ num_layers = 1
 # 种类数
 num_classes = 10
 # 训练周期数
-num_epochs = 50
+num_epochs = 500
 # 每次取训练集中的100个数据用以训练
 batch_size = 100
 
@@ -72,7 +72,7 @@ class MLP(nn.Module):
         self.num_layers = num_layers
 
         # 随机将输入张量中的部分元素设置为0， p为将元素置0的概率
-        self.p_in = nn.Dropout(p=drop_in)
+        # self.p_in = nn.Dropout(p=drop_in)
         # 设置每层网络
         for i in range(1, self.num_layers+1):
             # 若i=1输入层，输入特征数为input_size，否则为隐藏层，输入特征为隐藏层神经元个数
@@ -86,17 +86,17 @@ class MLP(nn.Module):
                 # 对out_features维度进行归一化，momentum为移动平均的动量值，eps为数值稳定性而加到分母上的值
                 # nn.BatchNorm1d(out_features, momentum=momentum, eps=eps),
                 # 激活函数
-                BinaryTanh(),
+                BinaryTanh(),)
                 # 随机置零
-                nn.Dropout(p=drop_hid))
+                # nn.Dropout(p=drop_hid))
             # 设置属性值，参数分别为对象、名称、属性值
             setattr(self, 'layer{}'.format(i), layer)
         # 输出层设置
-        self.fc = BinaryLinear(hidden_size, num_classes, bias=False)  
-    
+        self.fc = BinaryLinear(hidden_size, num_classes, bias=False)
+
     def forward(self, x):
         # 将输入x随机置0
-        out = self.p_in(x)
+        out = x
         # 依次执行每层操作
         for i in range(1, self.num_layers+1):
             out = getattr(self, 'layer{}'.format(i))(out)
@@ -174,4 +174,4 @@ for epoch in range(num_epochs):
     mlp.train()
 
 # Save the Trained Model
-torch.save(mlp.state_dict(), 'bnn1024.pkl')
+torch.save(mlp.state_dict(), 'bnn128_3.pkl')
